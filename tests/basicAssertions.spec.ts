@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+test.describe('Basic Assertions', () => {
 test('Login and Validate', {tag: "@links"},  async ({ page }) => {
 
     await page.goto('https://practicesoftwaretesting.com/auth/login');
@@ -28,4 +29,5 @@ test('Login and Validate', {tag: "@links"},  async ({ page }) => {
 
 
     }
+});
 });

@@ -15,6 +15,8 @@ test('Sign In', async ({ page }) => {
   await page.getByPlaceholder('Your password').fill('welcome01');
   await page.getByRole('button', { name: 'Login' }).click();
 
+      // Wait for the page to load after login
+    await page.waitForLoadState('networkidle');
   // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'My account' })).toBeVisible();
+   await expect(page.getByTestId('nav-menu')).toContainText('Jane Doe');
 });
