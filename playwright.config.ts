@@ -47,8 +47,7 @@ export default defineConfig({
       name: 'chromium',
       dependencies : ['setup'],
      
-      use: { ...devices['Desktop Chrome'], permissions: ['clipboard-read', 'clipboard-write'],
-        storageState: 'playwright/.auth/apilogin.json',
+      use: { ...devices['Desktop Chrome'], permissions: ['clipboard-read', 'clipboard-write']
        },
        
     },
