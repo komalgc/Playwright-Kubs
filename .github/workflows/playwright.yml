@@ -16,4 +16,4 @@ jobs:
       run: docker build -t playwright-tests .
 
 - name: Run one Playwright test inside Docker
-  run: docker run --rm playwright-tests npx playwright test tests/authenticateViaApi.spec.ts --workers=1
+  run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report playwright-tests npx playwright test tests/authenticateViaApi.spec.ts --workers=1
