@@ -78,9 +78,13 @@ test.describe("Authenticated API Test", () => {
     console.log("Saved storage state:", savedState.origins);
   });
 
-  test.use({ storageState: authFile });
 
-  test("customer sees my account page", async ({ page }) => {
+
+  test("customer sees my account page", async ({ browser }) => {
+      const context = await browser.newContext({
+    storageState: authFile,
+  });
+    const page = await context.newPage();
     await page.goto(`${WEB_URL}/account`);
 
     await expect(page).toHaveURL(/account$/);
@@ -90,5 +94,6 @@ test.describe("Authenticated API Test", () => {
     // Example validation
     // Update this based on actual page text
     await expect(page.locator("body")).toContainText("My account");
+      await context.close();
   });
 });
