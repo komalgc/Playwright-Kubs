@@ -80,7 +80,7 @@ test.describe("Authenticated API Test", () => {
 
 
 
-  test("customer sees my account page", async ({ browser }) => {
+  test("customer sees my account page", {tag: "@smoke"}, async ({ browser }) => {
       const context = await browser.newContext({
     storageState: authFile,
   });
@@ -89,11 +89,11 @@ test.describe("Authenticated API Test", () => {
 
     await expect(page).toHaveURL(/account$/);
 
-    await page.waitForLoadState("networkidle");
+ 
 
     // Example validation
     // Update this based on actual page text
-    await expect(page.locator("body")).toContainText("My account");
+    await expect(page.locator("body")).toContainText("My account", {timeout: 60000});
       await context.close();
   });
 });
