@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Basic Assertions', () => {
-test('Login and Validate', {tag: "@links"},  async ({ page }) => {
+test('Login and Validate', {tag: "@smoke"},  async ({ page }) => {
 
     await page.goto('https://practicesoftwaretesting.com/auth/login');
     await page.getByPlaceholder('Your email').fill('customer@practicesoftwaretesting.com');
@@ -23,10 +23,7 @@ test('Login and Validate', {tag: "@links"},  async ({ page }) => {
             await productcard.click();
             await expect(page.getByRole('heading', { name: 'Thor Hammer' })).toBeVisible();
             break;
-
         }
-
-
 
     }
 });

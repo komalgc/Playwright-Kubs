@@ -4,43 +4,35 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  test-without-docker:
+  build-push-and-test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Build Docker image
+        run: docker build -t ghcr.io/komalgc/playwright-tests:latest .
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      - name: Push Docker image
+        run: docker push ghcr.io/komalgc/playwright-tests:latest
 
-    - name: Run Playwright tests
-      run: npx playwright test
+      - name: Run Playwright tests inside Docker
+        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report ghcr.io/komalgc/playwright-tests:latest npx playwright test tests/authenticateViaApi.spec.ts --workers=1
 
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report-without-docker
-        path: playwright-report/
-        retention-days: 30
-
-  test-with-docker:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Build Docker image
-      run: docker build -t playwright-tests .
-
-    - name: Run Playwright tests inside Docker
-      run: docker run --rm playwright-tests
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-docker
+          path: playwright-report/
+          retention-days: 30
