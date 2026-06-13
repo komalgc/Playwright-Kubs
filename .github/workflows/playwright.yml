@@ -4,21 +4,32 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
-  test-with-docker:
+  build-push-and-test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t playwright-tests .
+        run: docker build -t ghcr.io/komalgc/playwright-tests:latest .
 
-      - name: Run one Playwright test inside Docker
-        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report playwright-tests npx playwright test tests/authenticateViaApi.spec.ts --workers=1
+      - name: Push Docker image
+        run: docker push ghcr.io/komalgc/playwright-tests:latest
 
-      - name: Upload Docker Playwright report
+      - name: Run Playwright tests inside Docker
+        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report ghcr.io/komalgc/playwright-tests:latest npx playwright test tests/authenticateViaApi.spec.ts --workers=1
+
+      - name: Upload Playwright report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

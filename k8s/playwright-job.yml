@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: playwright-tests
+spec:
+  template:
+    spec:
+      containers:
+        - name: playwright-tests
+          image: ghcr.io/komalgc17/playwright-tests:latest
+          imagePullPolicy: Always
+          command:
+            - npx
+            - playwright
+            - test
+            - tests/authenticateViaApi.spec.ts
+            - --workers=1
+      restartPolicy: Never
+  backoffLimit: 0
