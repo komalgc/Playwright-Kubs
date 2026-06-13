@@ -23,10 +23,7 @@ test('Login and Validate', {tag: "@links"},  async ({ page }) => {
             await productcard.click();
             await expect(page.getByRole('heading', { name: 'Thor Hammer' })).toBeVisible();
             break;
-
         }
-
-
 
     }
 });

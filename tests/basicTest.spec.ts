@@ -18,5 +18,5 @@ test('Sign In', async ({ page }) => {
       // Wait for the page to load after login
     await page.waitForLoadState('networkidle');
   // Expects page to have a heading with the name of Installation.
-   //await expect(page.getByTestId('nav-menu')).toContainText('Jane Doe');
+   await expect(page.getByTestId('nav-menu')).toContainText('Jane Doe');
 });

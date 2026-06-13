@@ -16,7 +16,7 @@ jobs:
         run: docker build -t playwright-tests .
 
       - name: Run one Playwright test inside Docker
-        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report playwright-tests npx playwright test tests/authenticateViaApi.spec.ts --workers=1
+        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report playwright-tests npx playwright test tests --workers=1
 
       - name: Upload Docker Playwright report
         uses: actions/upload-artifact@v4
