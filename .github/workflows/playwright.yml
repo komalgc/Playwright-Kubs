@@ -27,7 +27,7 @@ jobs:
         run: docker push ghcr.io/komalgc/playwright-tests:latest
 
       - name: Run Playwright tests inside Docker
-        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report ghcr.io/komalgc/playwright-tests:latest npx playwright test tests/authenticateViaApi.spec.ts --workers=1
+        run: docker run --rm -v ${{ github.workspace }}/playwright-report:/app/playwright-report ghcr.io/komalgc/playwright-tests:latest npx playwright test tests --workers=1
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v4
