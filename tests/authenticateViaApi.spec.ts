@@ -78,17 +78,22 @@ test.describe("Authenticated API Test", () => {
     console.log("Saved storage state:", savedState.origins);
   });
 
-  test.use({ storageState: authFile });
 
-  test("customer sees my account page", async ({ page }) => {
+
+  test("customer sees my account page", {tag: "@smoke"}, async ({ browser }) => {
+      const context = await browser.newContext({
+    storageState: authFile,
+  });
+    const page = await context.newPage();
     await page.goto(`${WEB_URL}/account`);
 
     await expect(page).toHaveURL(/account$/);
 
-    await page.waitForLoadState("networkidle");
+ 
 
     // Example validation
     // Update this based on actual page text
-    await expect(page.locator("body")).toContainText("My account");
+    await expect(page.locator("body")).toContainText("My account", {timeout: 60000});
+      await context.close();
   });
 });
